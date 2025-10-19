@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS 2 Viewmodel ve Crosshair Ayarları</title>
+    <style>
+        body {
+            background-color: #1c1c1c; /* Koyu arka plan */
+            color: #f0f0f0; /* Açık metin rengi */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #282828; /* İçerik kutusu rengi */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #f0f0f0;
+            font-size: 24px;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .viewmodel-settings p {
+            background-color: #333;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace; /* Kod yazı tipi */
+            cursor: pointer; /* Tıklanabilir olduğunu belirtir */
+            transition: background-color 0.2s;
+        }
+
+        .viewmodel-settings p:hover {
+            background-color: #444;
+        }
+
+        .console-text {
+            color: #bbb;
+        }
+
+        .command-value {
+            color: #90ee90; /* Açık yeşil, daha belirgin olabilir */
+        }
+
+        .crosshair-section {
+            margin-top: 30px;
+        }
+
+        .crosshair-section h2 {
+            color: #f0f0f0;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .crosshair-code {
+            display: inline-block;
+            background-color: #404040;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            cursor: pointer; /* Tıklanabilir olduğunu belirtir */
+            transition: background-color 0.2s;
+            white-space: nowrap; /* Kodun tek satırda kalmasını sağlar */
+        }
+
+        .crosshair-code:hover {
+            background-color: #505050;
+        }
+
+        /* Başarılı kopyalama bildirimi */
+        .copy-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .copy-message.show {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cs 2 viewmodel ayarları</h1>
+
+    <div class="viewmodel-settings">
+        <p onclick="copyToClipboard(this)" data-clipboard-text="viewmodel_fov 64.000000">
+            <span class="console-text">[Console]</span> viewmodel_fov = <span class="command-value">64.000000</span>
+        </p>
+
+        <p onclick="copyToClipboard(this)" data-clipboard-text="viewmodel_offset_x -2.000000">
+            <span class="console-text">[Console]</span> viewmodel_offset_x = <span class="command-value">-2.000000</span>
+        </p>
+
+        <p onclick="copyToClipboard(this)" data-clipboard-text="viewmodel_offset_y -2.000000">
+            <span class="console-text">[Console]</span> viewmodel_offset_y = <span class="command-value">-2.000000</span>
+        </p>
+
+        <p onclick="copyToClipboard(this)" data-clipboard-text="viewmodel_offset_z -2.000000">
+            <span class="console-text">[Console]</span> viewmodel_offset_z = <span class="command-value">-2.000000</span>
+        </p>
+
+        <p onclick="copyToClipboard(this)" data-clipboard-text="viewmodel_presetpos 3">
+            <span class="console-text">[Console]</span> viewmodel_presetpos = <span class="command-value">3</span>
+        </p>
+    </div>
+
+    <div class="crosshair-section">
+        <h2>Crosshair:</h2>
+        <div class="crosshair-code" onclick="copyToClipboard(this)" data-clipboard-text="CSGO-SmDeJ-RE5VR-KdAsq-4OerR-xXxTC">
+            CSGO-SmDeJ-RE5VR-KdAsq-4OerR-xXxTC
+        </div>
+    </div>
+</div>
+
+<div id="copyMessage" class="copy-message">Kopyalandı!</div>
+
+<script>
+    function copyToClipboard(element) {
+        // Kopyalanacak metni data-clipboard-text özniteliğinden al
+        const textToCopy = element.getAttribute('data-clipboard-text');
+
+        // Metni panoya kopyalamak için modern API kullan
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // Başarılı kopyalama bildirimi göster
+            showCopyMessage();
+        }).catch(err => {
+            // Hata durumunda (örneğin eski tarayıcılar)
+            console.error('Kopyalama hatası:', err);
+            // Alternatif yöntem:
+            fallbackCopyTextToClipboard(textToCopy);
+            showCopyMessage(); // Alternatif yöntem başarılı kabul edilip mesaj gösterilir
+        });
+    }
+
+    function showCopyMessage() {
+        const message = document.getElementById('copyMessage');
+        message.classList.add('show');
+
+        // 1.5 saniye sonra mesajı gizle
+        setTimeout(() => {
+            message.classList.remove('show');
+        }, 1500);
+    }
+
+    // Modern API desteklenmediğinde eski yöntem
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // Sayfa dışına taşı (görünmez yap)
+        textArea.style.position = "fixed";
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+        textArea.style.opacity = 0;
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.error('Alternatif kopyalama başarısız oldu: ', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+</script>
+
+</body>
+</html>
